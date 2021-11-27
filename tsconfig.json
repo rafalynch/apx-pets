@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonJs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "outDir": "backend" // Carpeta donde se envia lo compilado.
+  },
+  "include": ["./backend-src/**/*"] // Que incluya a todos los archivos que sean .ts de cualquier carpeta de /backend.
+}
