@@ -39,8 +39,8 @@ class Permisos extends HTMLElement {
     document.querySelector(".permisos-btn").addEventListener("click", () => {
       navigator.geolocation.getCurrentPosition(function (position) {
         state.permitirUbicacion(position);
-        Router.go("/home");
       });
+      Router.go("/home");
     });
 
     // CSS
