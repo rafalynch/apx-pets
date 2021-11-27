@@ -4,7 +4,6 @@ export const state = {
       email: "",
       nombre: "",
       id: "",
-      password: "",
       token: "",
     },
     signedIn: false,
@@ -40,11 +39,6 @@ export const state = {
     currentState.currentUser.email = email;
     this.setState(currentState);
   },
-  setPassword(password) {
-    const currentState = this.getState();
-    currentState.currentUser.password = password;
-    this.setState(currentState);
-  },
   setName(fullName) {
     const currentState = this.getState();
     currentState.currentUser.nombre = fullName;
@@ -68,7 +62,6 @@ export const state = {
       email: "",
       nombre: "",
       id: "",
-      password: "",
       token: "",
     };
     this.setState(currentState);

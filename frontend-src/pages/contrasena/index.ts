@@ -60,7 +60,6 @@ class Contraseña extends HTMLElement {
       }).then((res) => {
         if (res.status == 200) {
           state.signIn();
-          state.setPassword(value.password);
 
           res.json().then(async (data) => {
             state.setToken(data.token);

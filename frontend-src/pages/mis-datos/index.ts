@@ -51,15 +51,11 @@ class MisDatos extends HTMLElement {
     </label>
     <label>
       CONTRASEÑA</br>
-      <input type="password" name="password" value="${
-        state.getState().currentUser.password
-      }" />
+      <input type="password" name="password" />
     </label>
     <label>
       REPETIR CONTRASEÑA</br>
-      <input type="password" name="passwordConfirmation" value="${
-        state.getState().currentUser.password
-      }"/>
+      <input type="password" name="passwordConfirmation" />
     </label>
     <button class="save-password-btn">Guardar</button>
     `;
@@ -98,7 +94,6 @@ class MisDatos extends HTMLElement {
         .then((res) => {
           res.json().then(async (data) => {
             state.signIn();
-            state.setPassword(value.password);
             state.setName(data.user.fullName);
             state.setId(data.user.id);
 
