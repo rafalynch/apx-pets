@@ -195,8 +195,7 @@ class Reportar extends HTMLElement {
     mapContainer.classList.add("map-container");
     reportarFormContEl.appendChild(mapContainer);
 
-    const MAPBOX_TOKEN =
-      "pk.eyJ1IjoicmFmYWx5bmNoIiwiYSI6ImNrdWoxOGY2cTJ0YWMycW56eXh5Y3Z4OGQifQ.zqxAiB1-awBbHgbarsvPMg";
+    const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
     mapboxgl.accessToken = MAPBOX_TOKEN;
     const mapboxClient = new MapboxClient(MAPBOX_TOKEN);

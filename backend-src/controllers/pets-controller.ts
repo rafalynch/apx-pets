@@ -118,10 +118,8 @@ async function deletePet(id) {
 
 async function createReport(name, phoneNumber, description, petId, contact) {
   const sgMail = require("@sendgrid/mail");
-  //sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  sgMail.setApiKey(
-    "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"
-  );
+
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: contact, // Change to your recipient
     from: "apxlostpets@gmail.com", // Change to your verified sender
