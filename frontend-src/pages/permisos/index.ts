@@ -32,7 +32,7 @@ class Permisos extends HTMLElement {
     permisosBodyContEl.classList.add("permisos-container__body");
     permisosBodyContEl.innerHTML = `
     <p>PARA VER LAS MASCOTAS REPORTADAS CERCA TUYO NECESITAMOS PERMISO PARA CONOCER TU UBICACION</p>
-    <button class="permisos-btn">Dar mi ubicacion</button>
+    <button type="button" class="permisos-btn">Dar mi ubicacion</button>
     `;
     permisosContainerEl.appendChild(permisosBodyContEl);
 
