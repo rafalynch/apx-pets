@@ -26,7 +26,7 @@ class Ingresar extends HTMLElement {
     `;
     ingresarContainerEl.appendChild(titleContainer);
 
-    // BODY
+    // BODY FORM
     const ingresarFormContEl = document.createElement("form");
     ingresarFormContEl.classList.add("ingresar-container__form");
     ingresarFormContEl.innerHTML = `
@@ -53,9 +53,11 @@ class Ingresar extends HTMLElement {
       mask.style.cssText = `top: 0; position: fixed; cursor: wait; z-index: 999; height: 100vh; width: 100vw;`;
       this.appendChild(mask);
 
-      state.setCurrentMail(value.email);
+      state.setCurrentMail((value.email as string).toLowerCase());
 
-      fetch(process.env.API_BASE_URL + "/auth/" + value.email).then((res) => {
+      fetch(
+        process.env.API_BASE_URL + "/auth/" + state.getState().currentUser.email
+      ).then((res) => {
         res.json().then((data) => {
           if (data) {
             Router.go("/contrasena");
