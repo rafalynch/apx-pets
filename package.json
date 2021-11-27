@@ -21,7 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^2.6.1",
-    "parcel": "^2.0.0",
+    "parcel": "^2.0.0-rc.0",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.8.0",
