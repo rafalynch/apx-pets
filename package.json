@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "engines": {
-    "node": "14.x"
+    "node": "14.17.0"
   },
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.13.2",
