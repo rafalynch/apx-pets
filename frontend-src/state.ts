@@ -32,7 +32,6 @@ export const state = {
       cb(newState);
     }
     window.localStorage.setItem("state", JSON.stringify(newState));
-    console.log("New state was set");
   },
   setCurrentMail(email) {
     const currentState = this.getState();
