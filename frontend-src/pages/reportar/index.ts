@@ -87,7 +87,6 @@ class Reportar extends HTMLElement {
             font-size: 16px;
             line-height: 24px;
             text-transform: uppercase;
-            height: 77px;
             width: 335px;
             padding-left: 4px;
           }
@@ -221,7 +220,7 @@ class Reportar extends HTMLElement {
       <label> UBICACION </br>
         <input name="q" type="search" />
       </label>
-      <div class="search-description">Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad.</div>
+      <div class="search-description">Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad. Podes ayudarte arrastrando el marcador.</div>
     `;
 
     // Handler
@@ -248,26 +247,40 @@ class Reportar extends HTMLElement {
     (function () {
       initSearchForm(function (results) {
         const firstResult = results[0];
-        const marker = new Marker()
+        const marker = new Marker({ draggable: true })
           .setLngLat(firstResult.geometry.coordinates)
           .addTo(map);
-        const [lng, lat] = firstResult.geometry.coordinates;
+
         map.setCenter(firstResult.geometry.coordinates);
         map.setZoom(14);
-        const latR = firstResult.geometry.coordinates[1];
-        const lngR = firstResult.geometry.coordinates[0];
-        fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${lngR},${latR}.json?limit=1&access_token=${MAPBOX_TOKEN}`
-        ).then((res) => {
-          res.json().then((data) => {
-            document.querySelector(".location-data").innerHTML = `
-              <input type="text" name="lat" value="${latR}" />
-              <input type="text" name="lng" value="${lngR}" />
-              <input type="text" name="city" value="${data.features[0].context[0].text}"/>
-              <input type="text" name="region" value="${data.features[0].context[1].text}"/>
-            `;
+        let latR = firstResult.geometry.coordinates[1];
+        let lngR = firstResult.geometry.coordinates[0];
+
+        function onDragEnd() {
+          const lngLat = marker.getLngLat();
+          latR = lngLat.lat;
+          lngR = lngLat.lng;
+          getLocationData();
+        }
+
+        marker.on("dragend", onDragEnd);
+
+        getLocationData();
+
+        function getLocationData() {
+          fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${lngR},${latR}.json?limit=1&access_token=${MAPBOX_TOKEN}`
+          ).then((res) => {
+            res.json().then((data) => {
+              document.querySelector(".location-data").innerHTML = `
+                <input type="text" name="lat" value="${latR}" />
+                <input type="text" name="lng" value="${lngR}" />
+                <input type="text" name="city" value="${data.features[0].context[0].text}"/>
+                <input type="text" name="region" value="${data.features[0].context[1].text}"/>
+              `;
+            });
           });
-        });
+        }
       });
     })();
 

@@ -106,7 +106,6 @@ class EditarMascota extends HTMLElement {
             font-size: 16px;
             line-height: 24px;
             text-transform: uppercase;
-            height: 77px;
             width: 335px;
             padding-left: 4px;
           }
@@ -239,21 +238,32 @@ class EditarMascota extends HTMLElement {
       zoom: 9, // starting zoom
     });
 
-    const marker = new mapboxgl.Marker()
+    const marker = new mapboxgl.Marker({ draggable: true })
       .setLngLat([petData.lng, petData.lat])
       .addTo(map);
+
+    function onDragEnd() {
+      const lngLat = marker.getLngLat();
+      getLocationData(lngLat.lng, lngLat.lat);
+    }
+
+    marker.on("dragend", onDragEnd);
 
     // location Data inputs container
     const locationData = document.createElement("label");
     editarFormContEl.append(locationData);
     locationData.classList.add("location-data");
     locationData.style.display = "none";
-    locationData.innerHTML = `
-              <input type="text" name="lat" value="${petData.lat}" />
-              <input type="text" name="lng" value="${petData.lng}" />
-              <input type="text" name="city" value="${petData.city}"/>
-              <input type="text" name="region" value="${petData.region}"/>
-            `;
+    setLocationInput();
+
+    function setLocationInput() {
+      locationData.innerHTML = `
+                <input type="text" name="lat" value="${petData.lat}" />
+                <input type="text" name="lng" value="${petData.lng}" />
+                <input type="text" name="city" value="${petData.city}"/>
+                <input type="text" name="region" value="${petData.region}"/>
+              `;
+    }
 
     // BUSCADOR
     const mapSearch = document.createElement("form");
@@ -263,7 +273,7 @@ class EditarMascota extends HTMLElement {
       <label> UBICACION </br>
         <input name="q" type="search" />
       </label>
-      <div class="search-description">Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad.</div>
+      <div class="search-description">Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad. Podes ayudarte arrastrando el marcador.</div>
     `;
 
     // Handler
@@ -291,7 +301,7 @@ class EditarMascota extends HTMLElement {
     (function () {
       initSearchForm(async function (results) {
         const firstResult = results[0];
-        const marker = new Marker()
+        const marker = new Marker({ draggable: true })
           .setLngLat(firstResult.geometry.coordinates)
           .addTo(map);
         const [lng, lat] = firstResult.geometry.coordinates;
@@ -299,20 +309,32 @@ class EditarMascota extends HTMLElement {
         map.setZoom(14);
         const latR = firstResult.geometry.coordinates[1];
         const lngR = firstResult.geometry.coordinates[0];
-        await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${lngR},${latR}.json?limit=1&access_token=${MAPBOX_TOKEN}`
-        ).then((res) => {
-          res.json().then((data) => {
-            locationData.innerHTML = `
-              <input type="text" name="lat" value="${latR}" />
-              <input type="text" name="lng" value="${lngR}" />
-              <input type="text" name="city" value="${data.features[0].context[0].text}"/>
-              <input type="text" name="region" value="${data.features[0].context[1].text}"/>
-            `;
-          });
-        });
+
+        function onDragEnd() {
+          const lngLat = marker.getLngLat();
+          getLocationData(lngLat.lng, lngLat.lat);
+        }
+
+        marker.on("dragend", onDragEnd);
+
+        await getLocationData(lngR, latR);
       });
     })();
+
+    async function getLocationData(lng, lat) {
+      await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?limit=1&access_token=${MAPBOX_TOKEN}`
+      ).then((res) => {
+        res.json().then((data) => {
+          locationData.innerHTML = `
+            <input type="text" name="lat" value="${lat}" />
+            <input type="text" name="lng" value="${lng}" />
+            <input type="text" name="city" value="${data.features[0].context[0].text}"/>
+            <input type="text" name="region" value="${data.features[0].context[1].text}"/>
+          `;
+        });
+      });
+    }
 
     //Boton de reportar
     const sumbitButton = document.createElement("button");
