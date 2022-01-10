@@ -1,5 +1,5 @@
-//import * as dotenv from "dotenv";
-//dotenv.config();
+import * as dotenv from "dotenv";
+dotenv.config();
 import * as cors from "cors";
 import * as express from "express";
 import * as bearerToken from "bearer-token";
@@ -52,7 +52,6 @@ app.post("/auth", async (req, res) => {
   } else {
     res.json({
       user: response.updatedUser,
-      auth: response.updatedAuth,
       mensaje: "Usuario actualizado correctamente!",
     });
   }

@@ -22,15 +22,17 @@ async function signup(email: string, password: string, fullName: string) {
       fullName,
     });
 
-    const auth = await Auth.findOne({
-      where: { email: email },
-    });
+    if (password != "") {
+      const auth = await Auth.findOne({
+        where: { email: email },
+      });
 
-    const updatedAuth = await auth.update({
-      password: sha1(password),
-    });
+      const updatedAuth = await auth.update({
+        password: sha1(password),
+      });
+    }
 
-    return { updatedUser, updatedAuth };
+    return { updatedUser };
   }
 
   // Crea una instancia de Auth, con la contraseña y a partir del email.
