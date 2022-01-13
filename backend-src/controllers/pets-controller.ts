@@ -59,38 +59,56 @@ async function findPetById(id) {
 }
 
 async function updatePet(
-  name: string,
-  lat: number,
-  lng: number,
-  imageUrl: string,
-  city: string,
-  region: string,
-  id: string
+  name?: string,
+  lat?: number,
+  lng?: number,
+  newImageUrl?: string,
+  city?: string,
+  region?: string,
+  id?: string
 ) {
-  const imagenCloudinary = await cloudinary.uploader.upload(imageUrl, {
-    resource_type: "image",
-    discard_original_filename: true,
-  });
+  if (newImageUrl) {
+    const imageUrl = await cloudinary.uploader.upload(newImageUrl, {
+      resource_type: "image",
+      discard_original_filename: true,
+    });
 
-  const update = await index.partialUpdateObject({
-    _geoloc: {
-      lat,
-      lng,
-    },
-    objectID: id,
-  });
+    await Pet.update(
+      {
+        imageUrl: imageUrl.secure_url,
+      },
+      { where: { id: id } }
+    );
+  }
 
-  return await Pet.update(
-    {
-      name,
-      lat,
-      lng,
-      imageUrl: imagenCloudinary.secure_url,
-      city,
-      region,
-    },
-    { where: { id: id } }
-  );
+  if (lat && lng && city && region) {
+    const update = await index.partialUpdateObject({
+      _geoloc: {
+        lat,
+        lng,
+      },
+      objectID: id,
+    });
+
+    await Pet.update(
+      {
+        lat,
+        lng,
+        city,
+        region,
+      },
+      { where: { id: id } }
+    );
+  }
+
+  if (name) {
+    await Pet.update(
+      {
+        name,
+      },
+      { where: { id: id } }
+    );
+  }
 }
 
 async function setFoundPet(id) {
