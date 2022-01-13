@@ -1,5 +1,5 @@
-import * as dotenv from "dotenv";
-dotenv.config();
+//import * as dotenv from "dotenv";
+//dotenv.config();
 import * as cors from "cors";
 import * as express from "express";
 import * as bearerToken from "bearer-token";
