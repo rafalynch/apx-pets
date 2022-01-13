@@ -68,17 +68,22 @@ async function updatePet(
   id?: string
 ) {
   if (newImageUrl) {
-    const imageUrl = await cloudinary.uploader.upload(newImageUrl, {
-      resource_type: "image",
-      discard_original_filename: true,
-    });
-
-    await Pet.update(
-      {
-        imageUrl: imageUrl.secure_url,
-      },
-      { where: { id: id } }
-    );
+    await cloudinary.uploader
+      .upload(newImageUrl, {
+        resource_type: "image",
+        discard_original_filename: true,
+      })
+      .then(async (imageUrl) => {
+        await Pet.update(
+          {
+            imageUrl: imageUrl.secure_url,
+          },
+          { where: { id: id } }
+        );
+      })
+      .catch((err) => {
+        return err;
+      });
   }
 
   if (lat && lng && city && region) {
@@ -102,7 +107,7 @@ async function updatePet(
   }
 
   if (name) {
-    await Pet.update(
+    return await Pet.update(
       {
         name,
       },
